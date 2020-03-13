@@ -64,7 +64,7 @@ export default createStore({
  {#if loading }
  <h1>Loading ...</h1>
  {:else}
- <h1>The counter value is {counter}</h1>
+ <h1>The counter value is {state}</h1>
  <button on:click={store.increment}>Increment</button>
  <button on:click={store.decrement}>Decrement</button>
  {/if}
