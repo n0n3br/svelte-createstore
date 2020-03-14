@@ -14,9 +14,9 @@ I also addedd suport for async actions, so it can be used in api fetch operation
 
 Use your favorite package manager
 ```node
-npm install --save @non3br/svelte-createstore
+npm install --save svelte-createstore
 
-yarn add @n0n3br/svelte-createstore
+yarn add svelte-createstore
 ```
 
 ## how to use

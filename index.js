@@ -1,7 +1,2 @@
-import App from "./example/Example.svelte";
-
-const app = new App({
-  target: document.body
-});
-
-export default app;
+const createStore = require('./lib/svelte-createstore').createStore
+module.exports.createStore = createStore
