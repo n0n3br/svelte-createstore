@@ -10,14 +10,6 @@ When your app grows, it's always a good idea to extract the business logic from 
 Inspired by other state management solutions, I ´wrote a code that automatically creates a writable store and ´provides access to the actions, so that components can interact with the data withou having to know the rules to do it. 
 I also addedd suport for async actions, so it can be used in api fetch operations, for example.
 
-## instalation
-
-Use your favorite package manager
-```node
-npm install --save svelte-createstore
-
-yarn add svelte-createstore
-```
 
 ## how to use
 
