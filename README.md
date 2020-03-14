@@ -35,7 +35,7 @@ The callback function of the subscribe method will receive as a parameter an obj
  
  ```javascript
  // file store.js
- import { createStore } from "svelte-createstore";
+ import { createStore } from "@n0n3br/svelte-createstore";
 
 export default createStore({
   initialState: 1,
