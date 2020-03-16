@@ -1,6 +1,6 @@
 {
   "name": "@n0n3br/svelte-createstore",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "repository": "https://github.com/n0n3br/svelte-createstore",
   "devDependencies": {
     "@babel/cli": "^7.8.4",
