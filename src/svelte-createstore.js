@@ -1,4 +1,5 @@
 import { writable } from "svelte/store";
+import "regenerator-runtime/runtime.js";
 
 const throwError = msg => {
   throw new Error(`[svelte-createstore error] : ${msg}`);
