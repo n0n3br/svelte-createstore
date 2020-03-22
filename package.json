@@ -2,27 +2,23 @@
   "name": "@n0n3br/svelte-createstore",
   "version": "0.1.1",
   "repository": "https://github.com/n0n3br/svelte-createstore",
+  "license": "MIT",
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.8.7",
     "@babel/preset-env": "^7.8.7",
-    "npm-run-all": "^4.1.5",
-    "rollup": "^1.10.1",
-    "rollup-plugin-commonjs": "^9.3.4",
-    "rollup-plugin-node-resolve": "^4.2.3",
-    "rollup-plugin-svelte": "^5.0.3",
-    "rollup-plugin-terser": "^5.3.0",
-    "sirv-cli": "^0.3.1"
+    "@testing-library/jest-dom": "^5.1.1",
+    "@testing-library/svelte": "^3.0.0",
+    "jest": "^25.1.0",
+    "svelte": "^3.18.1",
+    "svelte-jester": "^1.0.5"
   },
-  "dependencies": {
-    "svelte": "^3.18.1"
+  "jest": {
+    "setupFilesAfterEnv": [
+      "@testing-library/jest-dom/extend-expect"
+    ]
   },
   "scripts": {
-    "build": "rollup -c",
-    "autobuild": "rollup -c -w",
-    "dev": "run-p start:dev autobuild",
-    "start": "sirv public",
-    "start:dev": "sirv public --dev",
     "prepublish": "babel src --out-dir lib"
   },
   "babel": {
@@ -30,8 +26,14 @@
       "@babel/preset-env"
     ]
   },
-  "keywords": [],
-  "description": "",
+  "keywords": [
+    "svelte",
+    "store",
+    "actions",
+    "async",
+    "sync"
+  ],
+  "description": "Svelte 3 snippet to create a store with support do sync and async actions",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   }

@@ -9,7 +9,7 @@ import { terser } from "rollup-plugin-terser";
 const production = !process.env.ROLLUP_WATCH;
 
 export default {
-  input: "./example/index.js",
+  input: "./index.js",
   output: {
     sourcemap: true,
     format: "iife",

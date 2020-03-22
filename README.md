@@ -17,7 +17,7 @@ createStore is a method that requires 2 parameters:
 
 - initialState: value that will be loaded in the state key of the store once it's created. It can be anything, execpt for null and undefined.
 
-- actions: and object that describes the actions that will update the store state. This is the only way to update the store, no update or set default Svelte store methods are supported. Each action is composed of a name (the key itself) and a function that receives the current state as a parameter. The function must return the updated state. Async functions are supported.
+- actions: and object that describes the actions that will update the store state. This is the only way to update the store, no update or set default Svelte store methods are supported. Each action is composed of a name (the key itself) and a function that receives the current state as the first parameter and the other arguments passed after. The function must return the updated state. Async functions are supported.
 
 The execution of createStore returns an object that contains all the actions provided and can be executed by any component.
 
@@ -40,13 +40,13 @@ import { createStore } from "svelte-createstore";
 export default createStore({
   initialState: 1,
   actions: {
-    increment: state =>
+    increment: (state, amount) =>
       new Promise(resolve => {
         setTimeout(() => {
-          resolve(state + 1);
+          resolve(state + amount);
         }, 1000);
       }),
-    decrement: state => (state > 0 ? state - 1 : 0)
+    decrement: (state, amount) => (state > amount ? state - amount : 0)
   }
 });
 ```
@@ -57,8 +57,10 @@ export default createStore({
 <h1>Loading ...</h1>
 {:else}
 <h1>The counter value is {state}</h1>
-<button on:click="{store.increment}">Increment</button>
-<button on:click="{store.decrement}">Decrement</button>
+<button on:click="{() => store.increment(1)}">Increment 1</button>
+<button on:click="{() => store.increment(5)}">Increment 5</button>
+<button on:click="{() => store.decrement(1)}">Decrement 1</button>
+<button on:click="{() => store.decrement(5)}">Decrement 5</button>
 {/if}
 <script>
   import store from "./store";

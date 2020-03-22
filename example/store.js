@@ -1,14 +1,14 @@
 import { createStore } from "../src/svelte-createstore";
 
 export default createStore({
-  initialState: 1,
+  initialState: 0,
   actions: {
-    increment: state =>
+    increment: (state, amount) =>
       new Promise(resolve => {
         setTimeout(() => {
-          resolve(state + 1);
+          resolve(state + amount);
         }, 1000);
       }),
-    decrement: state => (state > 0 ? state - 1 : 0)
+    decrement: (state, amount) => (state > amount ? state - amount : 0)
   }
 });

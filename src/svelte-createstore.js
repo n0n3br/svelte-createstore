@@ -4,12 +4,15 @@ const throwError = msg => {
   throw new Error(`[svelte-createstore error] : ${msg}`);
 };
 const isObject = obj => obj === Object(obj);
+
 const isProvided = value => value !== null && value !== undefined;
+
 const get__store = store => {
   let $val;
   store.subscribe($ => ($val = $))();
   return $val;
 };
+
 const setLoading = store => {
   if (!get__store(store).loading)
     store.update(currentState => ({
@@ -32,6 +35,7 @@ const setSuccess = (store, state) => {
     error: null
   }));
 };
+
 export const createStore = ({ initialState = null, actions = null }) => {
   if (!isProvided(initialState)) throwError("no initialState provided");
   if (!actions) throwError("no actions provided");
@@ -40,11 +44,11 @@ export const createStore = ({ initialState = null, actions = null }) => {
   const storeActions = Object.keys(actions).reduce(
     (memo, action) => ({
       ...memo,
-      [action]: async () => {
+      [action]: async (...args) => {
         try {
           let newState;
           const currentState = get__store(store).state;
-          const actionResponse = actions[action](currentState);
+          const actionResponse = actions[action](currentState, ...args);
           if (actionResponse instanceof Promise) {
             setLoading(store);
             newState = await Promise.resolve(actionResponse);
