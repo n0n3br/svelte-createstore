@@ -1,5 +1,6 @@
 import { writable } from "svelte/store";
-import "regenerator-runtime/runtime.js";
+
+let store;
 
 const throwError = msg => {
   throw new Error(`[svelte-createstore error] : ${msg}`);
@@ -8,40 +9,105 @@ const isObject = obj => obj === Object(obj);
 
 const isProvided = value => value !== null && value !== undefined;
 
-const get__store = store => {
+const get__store = (module = null) => {
   let $val;
   store.subscribe($ => ($val = $))();
-  return $val;
+  return !module ? $val : $val[module];
 };
 
-const setLoading = store => {
-  if (!get__store(store).loading)
-    store.update(currentState => ({
-      ...currentState,
-      loading: true,
-      error: null
-    }));
+const setLoading = module => {
+  if (!get__store(module).loading)
+    store.update(currentState =>
+      Object.assign(
+        currentState,
+        !module
+          ? {
+              loading: true,
+              error: null
+            }
+          : { [module]: { loading: true, error: null } }
+      )
+    );
 };
 
-const setError = (store, error) => {
-  if (get__store(store).error !== error)
-    store.update(currentState => ({ ...currentState, error, loading: false }));
+const setError = (error, module) => {
+  if (get__store(module).error !== error)
+    store.update(currentState =>
+      Object.assign(
+        currentState,
+        !module
+          ? { error, loading: false }
+          : { [module]: { loading: false, error } }
+      )
+    );
 };
 
-const setSuccess = (store, state) => {
-  store.update(currentState => ({
-    ...currentState,
-    state,
-    loading: false,
-    error: null
-  }));
+const setSuccess = (state, module) => {
+  store.update(currentState =>
+    Object.assign(
+      currentState,
+      !module
+        ? { state, loading: false, error: null }
+        : { [module]: { state, loading: false, error: null } }
+    )
+  );
 };
 
-export const createStore = ({ initialState = null, actions = null }) => {
+const mountInitialState = (initialState, modules) => {
+  let state = initialState;
+  Object.keys(modules || {}).forEach(module => {
+    if (!modules[module].initialState)
+      throwError(`module ${module} does not have a initialState`);
+    state[module] = modules[module].initialState;
+  });
+  return state;
+};
+
+const mountActions = (actions, modules) => {
+  return Object.assign(
+    ...Object.keys(actions).reduce((memo, key) => {
+      Object.assign(memo, { [key]: (...args) => executeAction(action, args) });
+    }, {}),
+    ...Objet.keys(modules || {}).reduce(
+      (memo, module) => ({ ...memo, [module]: { ...module.actions } || {} }),
+      {}
+    )
+  );
+};
+
+const executeAction = async (action, args, module = null) => {
+  let currentState = get__store(module);
+  let newState;
+  const response = action(currentState, ...args);
+  if (response instanceof Promise) {
+    setLoading(store, module);
+    newState = await Promise.resolve(response);
+  } else {
+    newState = response;
+  }
+  if (typeof newState !== typeof currentState) {
+    throwError(
+      `action '${action}'${
+        module ? " of module " + module + " " : ""
+      } returned type ${typeof newState} differ from initialState type  ${typeof currentState}`
+    );
+  }
+  setSuccess(newState, module);
+};
+
+export const createStore = ({
+  initialState = null,
+  actions = null,
+  modules = null
+}) => {
   if (!isProvided(initialState)) throwError("no initialState provided");
   if (!actions) throwError("no actions provided");
-  if (!isObject(actions)) throw new Error("actions must be of type Object");
-  const store = writable({ state: initialState, loading: false, error: null });
+  if (!isObject(actions)) throwError("actions must be of type Object");
+  store = writable({
+    state: mountInitialState(initialState, modules),
+    loading: false,
+    error: null
+  });
   const storeActions = Object.keys(actions).reduce(
     (memo, action) => ({
       ...memo,

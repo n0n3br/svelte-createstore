@@ -43,3 +43,50 @@ describe("svelte-createstore", () => {
     expect(target).toBe(1);
   });
 });
+
+describe("modules", () => {
+  let store, unsubscribe, storeState;
+
+  beforeEach(() => {
+    let storeConfig = {
+      initialState: { a: 2 },
+      actions: {
+        increment: (state, amount) => (state.a += amount)
+      },
+      modules: {
+        test: {
+          initialState: { b: 3 },
+          actions: {
+            increment: (state, amount) => (state.b += amount)
+          }
+        }
+      }
+    };
+    store = createStore(storeConfig);
+    unsubscribe = store.subscribe(({ state }) => {
+      storeState = state;
+    });
+  });
+  afterEach(() => {
+    unsubscribe();
+    store = null;
+    unsubscribe = null;
+    storeState = null;
+  });
+
+  describe("state", () => {
+    it("should create initial state with modules", () => {
+      let store = createStore(storeConfig);
+      let storeState;
+      expect(storeState).toStrictEqual({ a: 2, test: { b: 3 } });
+      store.unsubscribe();
+    });
+  });
+
+  describe("actions", () => {
+    it("should execute root sync action", () => {
+      store.increment(1);
+      expect(storeState).toStrictEqual({ a: 3, test: { b: 3 } });
+    });
+  });
+});

@@ -12,8 +12,10 @@
     "@testing-library/svelte": "^3.0.0",
     "jest": "^25.1.0",
     "regenerator-runtime": "^0.13.5",
-    "svelte": "^3.18.1",
     "svelte-jester": "^1.0.5"
+  },
+  "peerDependencies": {
+    "svelte": "^3.18.1"
   },
   "jest": {
     "setupFilesAfterEnv": [
@@ -37,8 +39,5 @@
     "async",
     "sync"
   ],
-  "description": "Svelte 3 snippet to create a store with support do sync and async actions",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
-  }
+  "description": "Svelte 3 snippet to create a store with support do sync and async actions"
 }
