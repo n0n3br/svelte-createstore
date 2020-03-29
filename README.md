@@ -1,4 +1,5 @@
 # svelte-createstore
+![Node.js CI](https://github.com/n0n3br/svelte-createstore/workflows/Node.js%20CI/badge.svg?branch=master)
 
 Svelte 3 related module to create a store with support to modules and sync/async actions
 
