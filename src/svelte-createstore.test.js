@@ -1,4 +1,4 @@
-import { createStore } from "../example/node_modules/@n0n3br/svelte-createstore/lib/svelte-createstore";
+import { createStore } from "./svelte-createstore";
 
 describe("svelte-createstore", () => {
   describe("state", () => {

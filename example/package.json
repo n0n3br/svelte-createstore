@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "@n0n3br/svelte-createstore": "^0.1.5",
+    "@n0n3br/svelte-createstore": "^0.1.6",
     "npm-run-all": "^4.1.5",
     "rollup": "^1.10.1",
     "rollup-plugin-commonjs": "^9.3.4",

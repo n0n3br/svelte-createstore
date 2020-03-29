@@ -10,6 +10,7 @@
     "@babel/preset-env": "^7.8.7",
     "@testing-library/jest-dom": "^5.1.1",
     "@testing-library/svelte": "^3.0.0",
+    "babel-preset-minify": "^0.5.1",
     "jest": "^25.1.0",
     "regenerator-runtime": "^0.13.5",
     "svelte-jester": "^1.0.5"
@@ -20,25 +21,22 @@
   "jest": {
     "testEnvironment": "node",
     "setupFilesAfterEnv": [
-      "@testing-library/jest-dom/extend-expect",
-      "./setupTests.js"
+      "@testing-library/jest-dom/extend-expect"
     ]
   },
   "scripts": {
     "test": "jest",
-    "prepublish": "babel src --out-dir lib"
+    "prepublish": "babel src --out-dir lib --ignore **/*.test.js"
   },
   "babel": {
-    "ignore": [
-      "**/*.test.js"
-    ],
     "presets": [
+      "minify",
       [
         "@babel/preset-env",
         {
-          "modules": false,
-          "useBuiltIns": "usage",
-          "corejs": 2
+          "targets": {
+            "node": 10
+          }
         }
       ]
     ]

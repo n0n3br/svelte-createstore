@@ -1,4 +1,4 @@
-import { createStore } from "@n0n3br/svelte-createstore";
+import { createStore } from "../lib/svelte-createstore";
 
 export default createStore({
   initialState: { counter: 0 },
