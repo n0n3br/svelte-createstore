@@ -26,11 +26,21 @@
   },
   "scripts": {
     "test": "jest",
-    "prepublish": "babel src --out-dir lib --ignore '**/*.test.js'"
+    "prepublish": "babel src --out-dir lib"
   },
   "babel": {
+    "ignore": [
+      "**/*.test.js"
+    ],
     "presets": [
-      "@babel/preset-env"
+      [
+        "@babel/preset-env",
+        {
+          "modules": false,
+          "useBuiltIns": "usage",
+          "corejs": 2
+        }
+      ]
     ]
   },
   "keywords": [
@@ -40,5 +50,5 @@
     "async",
     "sync"
   ],
-  "description": "Svelte 3 snippet to create a store with support do sync and async actions"
+  "description": "Svelte 3 module to create a store with support do sync and async actions"
 }
