@@ -1,74 +1,38 @@
 # svelte-createstore
 
-Svelte 3 snippet to create a store with support do sync and async actions
+Svelte 3 related module to create a store with support to modules and sync/async actions
 
 ## why i did this
 
 Svelte 3 provides a basic store that is perfectly fine for small applications.
 
-When your app grows, it's always a good idea to extract the business logic from components to keep them lean and focused on their concern, wich is interact with the user.
+When your app grows, it's always a good idea to extract the business logic from components to keep them lean and focused on what they're primarlly design to do - interact with the user.
 
-Inspired by other state management solutions, I ´wrote a code that automatically creates a writable store and ´provides access to the actions, so that components can interact with the data withou having to know the rules to do it.
-I also addedd suport for async actions, so it can be used in api fetch operations, for example.
+Inspired by other state management solutions, I ´wrote a code that automatically creates a writable store and ´provides access to the actions, so that components can interact with the data withou having to know the business logic to do it.
+I also added support for async actions and modules, so it can be used in api fetch operations, for example.
 
 ## how to use
 
-createStore is a method that requires 2 parameters:
+createStore is a method that requires 3 parameters:
 
-- initialState: value that will be loaded in the state key of the store once it's created. It can be anything, execpt for null and undefined.
+- initialState: value that will be loaded in the state key of the store once it's created. It must be a valid object.
 
-- actions: and object that describes the actions that will update the store state. This is the only way to update the store, no update or set default Svelte store methods are supported. Each action is composed of a name (the key itself) and a function that receives the current state as the first parameter and the other arguments passed after. The function must return the updated state. Async functions are supported.
+- actions: and object that describes the actions that will update the store state. This is the only way to update the store, no update or set default Svelte store methods are supported. Each action is composed of a name (the key itself) and a function that receives the current state as the first parameter and the other arguments passed after. The function must return the updated state. Async functions are supported. To call modules actions just use the module name dot the action name.
 
-The execution of createStore returns an object that contains all the actions provided and can be executed by any component.
+- modules: an object that lists the modules to be included in the store. It's not a required parameter, if not informed the store will be create withou modules. The object keys will be the modules names. A module descbribes a subset of a state, with it's own initialState and actions. Each module is a object with inititalStore and actions keys, like the root state. Modules actions has access only to that modules state.
+
+The execution of createStore returns an object that has all the actions provided and can be executed by any component.
 
 The returned object can also be used to subscribe to changes using the subscribe method like Svelte native store.
 
-The callback function of the subscribe method will receive as a parameter an object with 3 keys:
+The callback function of the subscribe method will receive as a variable an object with 3 keys:
 
-- state: the current state of the store
+- state: the current state of the store, including modules state in module's names keys.
 
-- error: if any error occurrs during an action execution, it will contain the error message. Otherwise is null
+- error: if any error occurs during an action execution, it will contain the error message. Otherwise is null
 
 - loading: it turns to true when an async action is executed and to false when it ends.
 
 ## example
 
-```javascript
-// file store.js
-import { createStore } from "svelte-createstore";
-
-export default createStore({
-  initialState: 1,
-  actions: {
-    increment: (state, amount) =>
-      new Promise(resolve => {
-        setTimeout(() => {
-          resolve(state + amount);
-        }, 1000);
-      }),
-    decrement: (state, amount) => (state > amount ? state - amount : 0)
-  }
-});
-```
-
-```html
-<!-- file App.svelte -->
-{#if loading }
-<h1>Loading ...</h1>
-{:else}
-<h1>The counter value is {state}</h1>
-<button on:click="{() => store.increment(1)}">Increment 1</button>
-<button on:click="{() => store.increment(5)}">Increment 5</button>
-<button on:click="{() => store.decrement(1)}">Decrement 1</button>
-<button on:click="{() => store.decrement(5)}">Decrement 5</button>
-{/if}
-<script>
-  import store from "./store";
-  import { onDestroy } from "svelte";
-  let state, loading, error;
-  const unsubscribe = store.subscribe(currentState => {
-    { state, loading, error } = currentState;
-  });
-  onDestroy(() => unsubscribe());
-</script>
-```
+A complete usage example can be found in my [github repository](https://github.com/n0n3br/svelte-createstore/tree/master/example)

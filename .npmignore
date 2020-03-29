@@ -2,3 +2,8 @@
 /example/
 /public/
 rollup.config.js
+package.json
+package-lock.json
+setupTests.js
+/.github/
+

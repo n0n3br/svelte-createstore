@@ -1,14 +1,26 @@
-import { createStore } from "../src/svelte-createstore";
+import { createStore } from "@n0n3br/svelte-createstore";
 
 export default createStore({
-  initialState: 0,
+  initialState: { counter: 0 },
   actions: {
     increment: (state, amount) =>
       new Promise(resolve => {
         setTimeout(() => {
-          resolve(state + amount);
+          resolve({ counter: state.counter + amount });
         }, 1000);
       }),
-    decrement: (state, amount) => (state > amount ? state - amount : 0)
+    decrement: (state, amount) =>
+      state.counter > amount
+        ? { counter: state.counter - amount }
+        : { counter: 0 }
+  },
+  modules: {
+    person: {
+      initialState: { name: "Joe " },
+      actions: {
+        setName: (state, name) => ({ ...state, name }),
+        clear: state => ({ name: "" })
+      }
+    }
   }
 });
